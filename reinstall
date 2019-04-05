@@ -1,0 +1,4 @@
+pyenv activate tools3
+pip uninstall passes
+pip install .
+pyenv deactivate
