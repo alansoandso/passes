@@ -7,7 +7,7 @@ from pretty_json import format_json
 
 from pymongo import MongoClient
 
-logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(message)s')
+logging.basicConfig(level=logging.INFO, format='%(message)s')
 
 
 def get_parser():
