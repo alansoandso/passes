@@ -5,29 +5,9 @@ import pytest
 from mongo import entitlements
 
 
-@patch('sys.argv', ['', 'some_named_user'])
 def test_parser_some_named_user():
-    parser = entitlements.get_parser()
-    args = vars(parser.parse_args())
-    assert 'some_named_user' == args['user']
-
-
-@patch('sys.argv', ['', ''])
-@patch('mongo.entitlements.load_users')
-@patch('mongo.entitlements.argparse.ArgumentParser.print_help')
-def test_clr_print_help(mock_load_users, mock_print_help):
-    mock_load_users.return_value = {}
-    entitlements.command_line_runner()
-    mock_print_help.assert_called_once()
-
-
-@patch('sys.argv', ['', 'moviesonly'])
-@patch('mongo.entitlements.get_entitlements')
-@patch('mongo.entitlements.load_users')
-def test_clr_profileid(mock_load_users, mock_get_entitlements, users):
-    mock_load_users.return_value = users
-    entitlements.command_line_runner()
-    mock_get_entitlements.assert_called_once_with('15706100')
+    args = entitlements.parse_args('passes some_named_user'.split())
+    assert 'some_named_user' == args.user
 
 
 @patch('builtins.open', mock_open(read_data='{"quality":{"dictionary of": "users"}}'))
@@ -43,12 +23,18 @@ def users():
 
 
 def test_profileid_from_username(users):
-    class args:
-        user = 'moviesonly'
-    assert entitlements.get_profileid(args, users) == '15706100'
+    assert users['moviesonly']['profileId'] == '15706100'
+    assert entitlements.get_profileid('moviesonly', users) == '15706100'
 
 
 def test_get_profileid_defaults(users):
-    class args:
-        user = '1234'
-    assert entitlements.get_profileid(args, users) == '1234'
+    assert users['moviesonly']['profileId'] != '1234'
+    assert entitlements.get_profileid('1234', users) == '1234'
+
+
+@patch('mongo.entitlements.get_entitlements')
+@patch('mongo.entitlements.load_users')
+def test_clr_profileid(mock_load_users, mock_get_entitlements, users):
+    mock_load_users.return_value = users
+    entitlements.command_line_runner('passes moviesonly'.split())
+    mock_get_entitlements.assert_called_once_with('15706100')
