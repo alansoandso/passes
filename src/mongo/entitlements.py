@@ -54,7 +54,7 @@ def load_users():
 def list_usernames(users):
     for username in users.keys():
         print(username)
-    print('\nFound {} available users'.format(len(users)))
+    print(f'\nFound {len(users)} available users')
 
 
 def get_profileid(user, users):

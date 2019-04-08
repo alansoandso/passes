@@ -1,8 +1,17 @@
-from unittest.mock import patch, mock_open
+from unittest.mock import call, patch, mock_open
 
 import pytest
 
 from mongo import entitlements
+
+
+@patch('argparse.ArgumentParser')
+def test_parser_print_usage(mock_parser):
+    with pytest.raises(SystemExit) as pytest_wrapped_e:
+        entitlements.parse_args(['passes'])
+    assert pytest_wrapped_e.type == SystemExit
+    assert pytest_wrapped_e.value.code == 1
+    mock_parser.assert_has_calls([call().print_usage()])
 
 
 def test_parser_some_named_user():
