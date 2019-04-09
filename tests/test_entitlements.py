@@ -23,6 +23,7 @@ def test_parser_some_named_user():
 def test_load_users():
     actual = entitlements.load_users()
     assert {"dictionary of": "users"} == actual
+    # noinspection PyUnresolvedReferences
     open.assert_called_once()
 
 
@@ -39,6 +40,12 @@ def test_profileid_from_username(users):
 def test_get_profileid_defaults(users):
     assert users['moviesonly']['profileId'] != '1234'
     assert entitlements.get_profileid('1234', users) == '1234'
+
+
+@patch('mongo.entitlements.load_users')
+def test_clr_list_users(mock_load_users, users):
+    mock_load_users.return_value = users
+    entitlements.command_line_runner('passes --list_users'.split())
 
 
 @patch('mongo.entitlements.get_entitlements')

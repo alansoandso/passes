@@ -4,6 +4,7 @@ Connect to Mongo and find user records
 ### Example:
 
 ```
+passes [test username|profileId]
 $ passes movies
 $ passes 33445566
 ```
@@ -13,7 +14,7 @@ $ passes 33445566
 - Python3
 - Pyenv
 - zsh complete
-
+- Popcorn Mongo db 
 
 ## Installing to the pyenv 'tools3'
 
@@ -32,7 +33,7 @@ reinstall
 
 ```
 pyenv activate tools3
-pip uninstall logs
+pip uninstall passes
 pyenv deactivate
 ```
 
@@ -40,7 +41,8 @@ pyenv deactivate
 
 ```
 pyenv local tools3
-pytest
+pip install -e .
+py.test -vs
 ```
 
 **zsh Completion**
@@ -49,3 +51,9 @@ pytest
 Add script to .oh-my-zsh/custom/plugins
 ```
 
+**Testing**
+```
+cd tests
+py.test -v
+py.test --cov-report html --cov mongo.entitlements
+```
