@@ -1,20 +1,14 @@
 import json
-from mongo.utils import pformat
+from user.utils import pformat
 
 
 class Usernames(object):
-    _state = {'_initialzed': False}
-
-    def __new__(cls, *p, **k):
-        self = object.__new__(cls, *p, **k)
-        self.__dict__ = cls._state
-        return self
+    users = None
 
     def __init__(self):
         # Only load in the file once
-        if not self._initialzed:
-            self.users = self.load_users()
-            self._initialzed = True
+        if not Usernames.users:
+            Usernames.users = self.load_users()
 
     @staticmethod
     def load_users():
@@ -23,13 +17,15 @@ class Usernames(object):
         with open(users_path) as json_data:
             return json.load(json_data).get('quality')
 
-    def list_usernames(self):
-        for username in self.users.keys():
+    @staticmethod
+    def list_usernames():
+        for username in Usernames.users.keys():
             print(username)
-        print(f'\nFound {len(self.users)} available users')
+        print(f'\nFound {len(Usernames.users)} available users')
 
-    def get_profileid(self, user):
-        user_details = self.users.get(user, '')
+    @staticmethod
+    def get_profileid(user):
+        user_details = Usernames.users.get(user, '')
         if not user_details:
             user_details = {'profileId': user}
         details = 'User details:\n'

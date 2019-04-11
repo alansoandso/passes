@@ -1,5 +1,5 @@
 from unittest.mock import patch, mock_open
-from mongo.usernames import Usernames
+from user.usernames import Usernames
 
 
 @patch('builtins.open',
@@ -10,7 +10,7 @@ def test_load_users():
     open.assert_called_once()
 
 
-def test_profileid_from_username():
+def test_profileid_from_user():
     quality = Usernames()
     assert quality.get_profileid('moviesonly') == '15706100'
 

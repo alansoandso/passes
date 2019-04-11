@@ -7,5 +7,3 @@ def pprint(json):
 
 def pformat(json):
     return format_json(json, 'solarized')
-
-

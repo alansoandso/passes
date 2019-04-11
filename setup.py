@@ -1,9 +1,5 @@
-import io
-import re
 from glob import glob
 from os.path import basename
-from os.path import dirname
-from os.path import join
 from os.path import splitext
 
 from setuptools import find_packages
@@ -21,9 +17,8 @@ setup(name='passes',
       packages=find_packages('src'),
       package_dir={'': 'src'},
       py_modules=[splitext(basename(path))[0] for path in glob('src/*.py')],
-      # package_data={'log_tools': ['logs.yaml']},
       include_package_data=True,
-      entry_points={'console_scripts': ['passes = mongo.entitlements:command_line_runner', ]},
+      entry_points={'console_scripts': ['passes = user.passes:command_line_runner', ]},
       install_requires=install_requires
       )
 

@@ -55,5 +55,7 @@ Add script to .oh-my-zsh/custom/plugins
 ```
 cd tests
 py.test -v
-py.test --cov-report html --cov mongo.entitlements
+
+py.test --cov-report html --cov user.passes
+open htmlcov/index.html
 ```
