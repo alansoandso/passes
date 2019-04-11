@@ -5,16 +5,20 @@ import json
 import logging
 import sys
 
-from pretty_json import format_json
-
-from pymongo import MongoClient
+from mongo.user import User
+from mongo.usernames import Usernames
+users = Usernames()
 
 logging.basicConfig(level=logging.INFO, format='%(message)s')
 
 
 def parse_args(argv):
     parser = argparse.ArgumentParser(description='Display mongo entitlement records for a user')
+    parser.add_argument('-a', '--all', action='store_true', default=False, help='All customer record')
+    parser.add_argument('-e', '--entitlements', action='store_false', default=True, help='entitlements records')
+    parser.add_argument('-i', '--atv', action='store_true', default=False, help='Apple TV records')
     parser.add_argument('-l', '--list_users', action='store_true', default=False, help='List all QA usernames')
+    parser.add_argument('-v', '--vodafone', action='store_true', default=False, help='Vodafone records')
     parser.add_argument('user', action="store", nargs='?', help='Username or profileid')
 
     if len(argv) == 1:
@@ -29,62 +33,30 @@ def command_line_runner(argv=None):
         argv = sys.argv
 
     args = parse_args(argv)
-    users = load_users()
 
     # List all QA users
     if args.list_users:
-        list_usernames(users)
+        users.list_usernames()
         return
 
     if args.user:
-        profileid = get_profileid(args.user, users)
+        profileid = users.get_profileid(args.user)
         if profileid:
-            get_entitlements(profileid)
+            print(get_records(profileid, args))
             return
 
 
-def load_users():
-    users_path = '/Users/alan/workspace/qa-cucumber-jvm/src/test/resources/environment/users.json'
-    # Load all QA users
-    with open(users_path) as json_data:
-        users = json.load(json_data).get('quality')
-    return users
-
-
-def list_usernames(users):
-    for username in users.keys():
-        print(username)
-    print(f'\nFound {len(users)} available users')
-
-
-def get_profileid(user, users):
-    user_details = users.get(user, '')
-    if not user_details:
-        user_details = {'profileId': user}
-    print('User details:')
-    pprint(user_details)
-    profileid = user_details.get('profileId', '')
-    print()
-    return profileid
-
-
-def get_entitlements(profileid):
-    client = MongoClient('mongodb://qualdb01.nowtv.dev:27017')
-    client.the_database.authenticate('popcorn', 'kernel', 'customer', mechanism='MONGODB-CR')
-    accounts = client.customer.accounts
-
-    print("db.getCollection('accounts').find({'_id' : '"+profileid+"'})")
-    pprint(accounts.find_one({"_id": profileid}))
-    print()
-
-    entitlements = client.customer_passes.entitlements
-    print("db.getCollection('entitlements').find({'accountId' : '"+profileid+"'})")
-    pprint(entitlements.find_one({"accountId": profileid}))
-    print()
-
-
-def pprint(json):
-    print(format_json(json, 'solarized'))
+def get_records(profileid, args):
+    user = User(profileid)
+    report = ''
+    report += user.get_accounts()
+    if args.entitlements or args.all:
+        report += user.get_entitlements()
+    if args.atv or args.all:
+        report += user.get_atv_subscriptions()
+    if args.vodafone or args.all:
+        report += user.get_vodafone_accounts()
+    return report
 
 
 if __name__ == '__main__':
