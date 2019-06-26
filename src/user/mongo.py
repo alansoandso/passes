@@ -23,6 +23,8 @@ class Mongo(object):
     def get_details_by(self, key='accountId', database='', collection=''):
         db_collection = self.client.__getattr__(database).__getattr__(collection)
         details = f"\ndb.getCollection('{collection}').find({{'{key}' : '{self.profileid}'}})\n"
-        details += pformat(db_collection.find_one({key: self.profileid}))
+        for detail in db_collection.find({key: self.profileid}):
+            details += pformat(detail)
+            details += '\n'
         return details
 
