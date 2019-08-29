@@ -12,10 +12,14 @@ class Usernames(object):
 
     @staticmethod
     def load_users():
-        users_path = '/Users/alan/workspace/popcorn-qa-cucumber-jvm/src/test/resources/environment/users.json'
-        # Load all QA users
-        with open(users_path) as json_data:
-            return json.load(json_data).get('quality')
+        try:
+            users_path = '/Users/alan/workspace/popcorn-qa-cucumber-jvm/src/test/resources/environment/users.json'
+            # Load all QA users
+            with open(users_path) as json_data:
+                return json.load(json_data).get('quality')
+        except json.decoder.JSONDecodeError as error:
+            print(f'Error on loading JSON from: {users_path}')
+            raise error
 
     @staticmethod
     def list_usernames():
