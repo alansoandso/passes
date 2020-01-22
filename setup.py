@@ -6,7 +6,7 @@ from setuptools import find_packages
 from setuptools import setup
 
 install_requires = [
-      'pytest==4.0.2',
+      'pytest>=4.0.2',
       'pretty-json>=1.2.0',
       'Pygments>=2.3.1',
       'pygments-json>=0.1',

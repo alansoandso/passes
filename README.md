@@ -48,7 +48,7 @@ py.test -vs
 **zsh Completion**
 
 ```
-Add script to .oh-my-zsh/custom/plugins
+Add passes.plugin.zsh to .oh-my-zsh/custom/plugins/passes
 ```
 
 **Testing**
