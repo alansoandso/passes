@@ -1,4 +1,4 @@
-compctl -K _passes -x 's[--]' -k '(all atv vodafone)' --  passes
+compctl -K _passes -x 's[--]' -k '(all atv prod_user vodafone)' --  passes
 
 _passes() {
   local completions

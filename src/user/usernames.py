@@ -1,5 +1,9 @@
 import json
+import logging
 from user.utils import pformat
+
+logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.WARNING)
 
 
 class Usernames(object):
@@ -18,20 +22,25 @@ class Usernames(object):
             with open(users_path) as json_data:
                 return json.load(json_data).get('quality')
         except json.decoder.JSONDecodeError as error:
-            print(f'Error on loading JSON from: {users_path}')
+            logging.WARNING(f'Error on loading JSON from: {users_path}')
             raise error
 
     @staticmethod
     def list_usernames():
+        names = ''
         for username in Usernames.users.keys():
-            print(username)
-        print(f'\nFound {len(Usernames.users)} available users')
+            names += username
+        names += f'\nFound {len(Usernames.users)} available users'
+
+        return names
 
     @staticmethod
     def get_profileid(user):
+        """Retrieve a profile id from test users, if not found, assume user is the profile id
+        """
         user_details = Usernames.users.get(user, '')
         if not user_details:
-            user_details = {'profileId': user}
+            user_details = {'profileId': user, 'info': 'Not a test user'}
         details = 'User details:\n'
         details += pformat(user_details)
         print(details)
