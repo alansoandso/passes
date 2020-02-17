@@ -29,7 +29,7 @@ class Usernames(object):
     def list_usernames():
         names = ''
         for username in Usernames.users.keys():
-            names += username
+            names += f'{username}\n'
         names += f'\nFound {len(Usernames.users)} available users'
 
         return names
