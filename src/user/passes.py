@@ -5,7 +5,6 @@ import logging
 import sys
 
 from user.mongo import Mongo
-from user.production import get_production_records
 from user.usernames import Usernames
 users = Usernames()
 
@@ -17,7 +16,6 @@ def parse_args(argv):
     parser.add_argument('-a', '--all', action='store_true', default=False, help='All customer record')
     parser.add_argument('-i', '--atv', action='store_true', default=False, help='Apple TV records')
     parser.add_argument('-l', '--list_users', action='store_true', default=False, help='List all QA usernames')
-    parser.add_argument('-p', '--prod_user', action='store_true', default=False, help='Production user')
     parser.add_argument('-v', '--vodafone', action='store_true', default=False, help='Vodafone records')
     parser.add_argument('user', action="store", nargs='?', help='Username or profileid')
 
@@ -42,10 +40,7 @@ def command_line_runner(argv=None):
     if args.user:
         profileid = users.get_profileid(args.user)
         if profileid:
-            if args.prod_user:
-                print(get_production_records(profileid))
-            else:
-                print(get_records(profileid, args))
+            print(get_records(profileid, args))
             return
 
 
