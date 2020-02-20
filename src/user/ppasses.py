@@ -67,7 +67,7 @@ def get_production_records(account_id):
     entitlements_db = Mongo('customer_passes')
     entitlements = entitlements_db.entitlements()
     # Output all records found
-    print("\n\ndb.getCollection('entitlements').find({{'accountId' : '{account_id}'}})")
+    print(f"\n\ndb.getCollection('entitlements').find({{'accountId' : '{account_id}'}})")
     for entitlement in entitlements.find({"accountId": account_id}):
         if entitlement:
             pprint(entitlement)
