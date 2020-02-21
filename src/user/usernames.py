@@ -1,5 +1,7 @@
 import json
 import logging
+import os
+
 from user.utils import pformat
 
 logger = logging.getLogger(__name__)
@@ -17,7 +19,7 @@ class Usernames(object):
     @staticmethod
     def load_users():
         try:
-            users_path = '/Users/alan/workspace/popcorn-qa-cucumber-jvm/src/test/resources/environment/users.json'
+            users_path = os.path.join(os.getenv('HOME'), 'workspace/popcorn-qa-cucumber-jvm/src/test/resources/environment/users.json')
             # Load all QA users
             with open(users_path) as json_data:
                 return json.load(json_data).get('quality')
@@ -39,9 +41,10 @@ class Usernames(object):
         """Retrieve a profile id from test users, if not found, assume user is the profile id
         """
         user_details = Usernames.users.get(user, '')
-        if not user_details:
-            user_details = {'profileId': user, 'info': 'Not a test user'}
-        details = 'User details:\n'
-        details += pformat(user_details)
-        print(details)
-        return user_details.get('profileId', '')
+        if user_details:
+            details = 'User details:\n'
+            details += pformat(user_details)
+            print(details)
+            return user_details.get('profileId', '')
+        else:
+            return user
