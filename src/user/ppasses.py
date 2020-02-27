@@ -5,7 +5,7 @@ import pickle
 import pymongo
 import sys
 from user.utils import pprint
-from sshtunnel import SSHTunnelForwarder
+from sshtunnel import SSHTunnelForwarder, open_tunnel
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.WARNING)
@@ -45,7 +45,8 @@ class Mongo(object):
     def ssh_tunnel(ip, port):
         """Return a SSH tunnel to the Mongo db
         """
-        tunnel = SSHTunnelForwarder(
+        tunnel = open_tunnel(
+            block_on_close=False,
             ssh_address_or_host='jump01.slunow.bskyb.com',
             ssh_port=22,
             ssh_username=os.getenv('q'),
@@ -62,7 +63,6 @@ def get_production_records(account_id):
     print(f"db.getCollection('accounts').find_one({{'_id' : '{account_id}'}})")
     account_record = accounts.find_one({"_id": account_id})
     pprint(account_record)
-    customer_db.close()
 
     entitlements_db = Mongo('customer_passes')
     entitlements = entitlements_db.entitlements()
@@ -71,6 +71,9 @@ def get_production_records(account_id):
     for entitlement in entitlements.find({"accountId": account_id}):
         if entitlement:
             pprint(entitlement)
+
+    # See: https://github.com/pahaz/sshtunnel/issues/138
+    customer_db.close()
     entitlements_db.close()
 
 
