@@ -56,6 +56,8 @@ Add passes.plugin.zsh to .oh-my-zsh/custom/plugins/passes
 cd tests
 py.test -v
 
-py.test --cov-report html --cov user.passes
+py.test --cov-report html --cov db.passes
 open htmlcov/index.html
+
+tox
 ```

@@ -19,11 +19,9 @@ setup(name='passes',
       description='Display mongo records for users',
       author='Alan So',
       author_email='alansoandso@gmail.com',
-      packages=find_packages('src'),
-      package_dir={'': 'src'},
-      py_modules=[splitext(basename(path))[0] for path in glob('src/*.py')],
+      packages=['db'],
       include_package_data=True,
-      entry_points={'console_scripts': ['passes = user.passes:command_line_runner', ]},
+      entry_points={'console_scripts': ['passes = db.passes:command_line_runner', ]},
       install_requires=install_requires
       )
 

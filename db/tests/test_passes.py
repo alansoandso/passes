@@ -2,7 +2,7 @@ from unittest.mock import call, patch, mock_open
 
 import pytest
 
-from user import passes
+from db import passes
 
 
 @patch('builtins.open',
@@ -21,13 +21,13 @@ def test_parser_some_named_user():
     assert 'some_named_user' == args.user
 
 
-@patch('user.passes.users')
+@patch('db.passes.users')
 def test_clr_list_users(mock_list_users):
     passes.command_line_runner('passes --list_users'.split())
     assert mock_list_users.list_usernames.called_once()
 
 
-@patch('user.passes.get_records')
+@patch('db.passes.get_records')
 def test_clr_profileid(mock_get_records):
     passes.command_line_runner('passes moviesonly'.split())
     mock_get_records.assert_called_once()

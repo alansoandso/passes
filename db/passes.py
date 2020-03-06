@@ -4,9 +4,9 @@ import argparse
 import logging
 import sys
 
-from user.mongo import Mongo
-from user.ppasses import get_production_records
-from user.usernames import Usernames
+from db.mongo import Mongo
+from db.ppasses import get_production_records
+from db.usernames import Usernames
 users = Usernames()
 
 logging.basicConfig(level=logging.INFO, format='%(message)s')

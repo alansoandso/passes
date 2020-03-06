@@ -1,5 +1,5 @@
 from pymongo import MongoClient
-from user.utils import pformat
+from db.utils import pformat
 
 
 class Mongo(object):

@@ -2,7 +2,7 @@ import json
 import logging
 import os
 
-from user.utils import pformat
+from db.utils import pformat
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.WARNING)
@@ -20,6 +20,7 @@ class Usernames(object):
     def load_users():
         try:
             users_path = os.path.join(os.getenv('HOME'), 'workspace/popcorn-qa-cucumber-jvm/src/test/resources/environment/users.json')
+            # users_path = '/Users/alan/workspace/popcorn-qa-cucumber-jvm/src/test/resources/environment/users.json'
             # Load all QA users
             with open(users_path) as json_data:
                 return json.load(json_data).get('quality')
